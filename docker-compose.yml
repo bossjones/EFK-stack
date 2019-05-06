@@ -1,24 +1,41 @@
 version: '3'
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+    # image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.6.2
+    # image: bossjones/elasticsearch:v5.6.2
     environment:
       discovery.type: single-node
+      ES_JAVA_OPTS: "-Xms2048m -Xmx2048m"
+      MINIMUM_MASTER_NODES: "1"
     ports:
       - 9200:9200
       - 9300:9300
+    volumes:
+      - ./data:/data
 
   fluentd:
-    build: ./fluentd
+    # build: ./fluentd
+    image: bossjones/fluentd-elasticsearch:v2.5.0
     volumes:
       - ./fluentd/conf:/fluentd/etc
-      - ./logs:/logs
-    ports:
-      - 8080:8080
+      - ./log:/log
+      - ./grok.d:/grok.d
+    environment:
+      FLUENTD_ARGS: "--no-supervisor"
+      TZ: "UTC"
+      TAIL_BUF_LIMIT: "5MB"
+    # ports:
+    #   # - 8080:8080
+    #   - 24231:24231
+    #   - 24220:24220
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:6.2.4
+    # image: docker.elastic.co/kibana/kibana:6.2.4
+    image: bossjones/kibana:5.6.2
     environment:
       ELASTICSEARCH_URL: http://elasticsearch:9200
+      XPACK_MONITORING_ENABLED: "false"
+      XPACK_SECURITY_ENABLED: "false"
     ports:
       - 5601:5601

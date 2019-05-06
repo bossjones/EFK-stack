@@ -23,13 +23,14 @@ services:
       - ./log:/log
       - ./grok.d:/grok.d
     environment:
-      FLUENTD_ARGS: "--no-supervisor"
+      FLUENTD_ARGS: "--no-supervisor -vv"
       TZ: "UTC"
       TAIL_BUF_LIMIT: "5MB"
-    # ports:
-    #   # - 8080:8080
-    #   - 24231:24231
-    #   - 24220:24220
+      FLUENT_CONF: "/fluentd/etc/fluent.conf"
+    ports:
+      - 8080:8080
+      - 24231:24231
+      - 24220:24220
 
   kibana:
     # image: docker.elastic.co/kibana/kibana:6.2.4

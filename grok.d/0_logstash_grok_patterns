@@ -658,8 +658,10 @@ BOSSJONES_UNIFI_SECURITYGATEWAY_KERNEL_START %{SYSLOGTIMESTAMP:time} %{HOSTNAME:
 # Combined these guys parse this:
 # --------------------------------------------------------------------------------------
 # DEBUG: Matches ->  ALIEN BLOCK:
+# DEBUG: Matches ->  TOR BLOCK:
+# INFO: https://community.ubnt.com/t5/UniFi-Routing-Switching/IPS-and-Firewall-ordering/td-p/2295457
 # --------------------------------------------------------------------------------------
-BOSSJONES_UNIFI_SECURITYGATEWAY_ALIEN_LOGS_START ALIEN BLOCK:\s+
+BOSSJONES_UNIFI_SECURITYGATEWAY_IDS_LOGS_START %{WORD:firewall.ids_block_type} BLOCK:\s+
 
 # --------------------------------------------------------------------------------------
 # DEBUG: Matches -> [WAN_LOCAL-3002-D]
@@ -742,3 +744,35 @@ BOSSJONES_IPTABLES_IP_START SRC=%{IPV4:firewall.source.ip} DST=%{IPV4:firewall.d
 #   BOSS_UNIFI_IPTABLES_LOG_RULES \A%{SYSLOGTIMESTAMP:timestamp_logged}%{SPACE}%{BACULA_DEVICE}%{SPACE}%{BACULA_JOB}%{NOTSPACE}%{SPACE}\[%{WORD:iptables.interface}-%{WORD:iptables.rule_index}-%{UBIQUITI_FIELD:iptables.rule_action}\]%{UBIQUITI_FIELD_IPTABLES_RULE_SET}
 
 # BOSSJONES_IPTABLES_IP_START SRC=%{IPV4:firewall.source.ip}\s*DST=%{IPV4:firewall.destination.ip}\s*LEN=%{UNSIGNED_INT:firewall.packet_length}\s*TOS=0x%{BASE16NUM:firewall.tos}\s*PREC=0x%{BASE16NUM:firewall.precidence_field}\s*TTL=%{UNSIGNED_INT:firewall.ttl}\s*ID=%{UNSIGNED_INT.firewall.id}\s*?*PROTO=(%{WORD:nf_protocol})
+
+
+# FIXME: ADD THIS TO BOSSLAB-PLAYBOOKS
+
+BOSS_UNSIGNED_INT [0-9]+
+BOSS_IPTABLES_ETHERNET IN=%{WORD:in_device}? OUT=%{WORD:out_device}? MAC=(?<mac_addr>[0-9a-f\:]+)?
+
+BOSS_IPTABLES_PORT_PAIR SPT=%{BOSS_UNSIGNED_INT:src_port} DPT=%{BOSS_UNSIGNED_INT:dst_port}
+
+BOSS_IPTABLES_TCP_FLAGS ((?<= )(CWR|ECE|URG|ACK|PSH|RST|SYN|FIN))*
+BOSS_IPTABLES_TCP_SEQ SEQ=%{BOSS_UNSIGNED_INT:seq_seq} ACK=%{BOSS_UNSIGNED_INT:seq_ack}
+BOSS_IPTABLES_TCP_DETAILS (?:%{BOSS_IPTABLES_TCP_SEQ} )?WINDOW=%{BOSS_UNSIGNED_INT:window} RES=0x%{BASE16NUM:res} %{BOSS_IPTABLES_TCP_FLAGS:tcp_flags}
+BOSS_IPTABLES_INCOMPLETE_PACKET INCOMPLETE \[%{BOSS_UNSIGNED_INT:incomplete} bytes\]
+
+BOSS_IPTABLES_UDP_DETAILS LEN=%{BOSS_UNSIGNED_INT:udp_len}
+
+BOSS_IPTABLES_ICMP_EXTRA_ECHO ID=%{BOSS_UNSIGNED_INT:icmp_id} SEQ=%{BOSS_UNSIGNED_INT:icmp_seq}
+BOSS_IPTABLES_ICMP_EXTRA_PARAM PARAMETER=%{BOSS_UNSIGNED_INT:icmp_parameter}
+BOSS_IPTABLES_ICMP_EXTRA_REDIRECT GATEWAY=%{IP:icmp_redirect}
+BOSS_IPTABLES_ICMP_EXTRA ( (?:%{BOSS_IPTABLES_ICMP_EXTRA_ECHO}|%{BOSS_IPTABLES_ICMP_EXTRA_PARAM}|%{BOSS_IPTABLES_ICMP_EXTRA_REDIRECT}))*
+
+BOSS_IPTABLES_ICMP_DETAILS TYPE=%{BOSS_UNSIGNED_INT:icmp_type} CODE=%{BOSS_UNSIGNED_INT:icmp_code}(( %{BOSS_IPTABLES_INCOMPLETE_PACKET})|%{IPTABLES_ICMP_EXTRA})
+
+BOSS_IPTABLES_PROTOCOL PROTO=(?<proto>[a-zA-Z0-9]+)
+
+BOSS_IPTABLES_IP_PAYLOAD %{BOSS_IPTABLES_PROTOCOL}( %{BOSS_IPTABLES_PORT_PAIR})?( (%{BOSS_IPTABLES_TCP_DETAILS}|%{BOSS_IPTABLES_UDP_DETAILS}|%{BOSS_IPTABLES_ICMP_DETAILS}|%{BOSS_IPTABLES_INCOMPLETE_PACKET}))?
+
+BOSS_IPTABLES_IP_FRAGFLAG ((?<= )(CE|DF|MF))*
+BOSS_IPTABLES_IP_START SRC=%{IP:src_ip} DST=%{IP:dst_ip} LEN=%{BOSS_UNSIGNED_INT:length} TOS=0x%{BASE16NUM:tos} PREC=0x%{BASE16NUM:prec} TTL=%{BOSS_UNSIGNED_INT:ttl} ID=%{BOSS_UNSIGNED_INT:id}(?: %{BOSS_IPTABLES_IP_FRAGFLAG:fragment_flags})?(?: FRAG: %{BOSS_UNSIGNED_INT:fragment})?
+BOSS_IPTABLES_IP %{BOSS_IPTABLES_IP_START} %{BOSS_IPTABLES_IP_PAYLOAD}
+
+BOSS_IPTABLES (?<orig_date>[\S]+) (?<orig_time>[\S]+) (?<hostname>[\S]+) ([\S]+) \[(?<since_bootup>[\d\.]+)\] (?<prefix>[\S]+)? %{BOSS_IPTABLES_ETHERNET} %{BOSS_IPTABLES_IP}

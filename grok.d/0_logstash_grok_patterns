@@ -655,6 +655,13 @@ BOSSJONES_IPTABLES_IP_START SRC=%{IPV4:firewall.source.ip} DST=%{IPV4:firewall.d
 BOSSJONES_UNIFI_SECURITYGATEWAY_KERNEL_START %{SYSLOGTIMESTAMP:time} %{HOSTNAME:hostname} %{WORD:process_name}:
 
 # --------------------------------------------------------------------------------------
+# Combined these guys parse this:
+# --------------------------------------------------------------------------------------
+# DEBUG: Matches ->  ALIEN BLOCK:
+# --------------------------------------------------------------------------------------
+BOSSJONES_UNIFI_SECURITYGATEWAY_ALIEN_LOGS_START ALIEN BLOCK:\s+
+
+# --------------------------------------------------------------------------------------
 # DEBUG: Matches -> [WAN_LOCAL-3002-D]
 # --------------------------------------------------------------------------------------
 BOSSJONES_UNIFI_SECURITYGATEWAY_FIREWALL_LOGS \[%{WORD:firewall.interface}-%{WORD:firewall.rule_index}-%{WORD:firewall.rule_action}\]

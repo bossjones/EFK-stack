@@ -2,3 +2,6 @@
 unifi*
 realunifilogs*
 fluentd.pos
+data
+test.txt
+alien.txt

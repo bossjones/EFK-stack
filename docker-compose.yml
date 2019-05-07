@@ -2,12 +2,15 @@ version: '3'
 services:
   elasticsearch:
     # image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
-    image: docker.elastic.co/elasticsearch/elasticsearch:5.6.2
+    # image: docker.elastic.co/elasticsearch/elasticsearch:5.6.2
     # image: bossjones/elasticsearch:v5.6.2
+    build: ./build/docker-elasticsearch
     environment:
       discovery.type: single-node
       ES_JAVA_OPTS: "-Xms2048m -Xmx2048m"
       MINIMUM_MASTER_NODES: "1"
+      XPACK_MONITORING_ENABLED: "false"
+      XPACK_SECURITY_ENABLED: "false"
     ports:
       - 9200:9200
       - 9300:9300
@@ -34,8 +37,9 @@ services:
 
   kibana:
     # image: docker.elastic.co/kibana/kibana:6.2.4
-    image: docker.elastic.co/kibana/kibana:5.6.2
+    # image: docker.elastic.co/kibana/kibana:5.6.2
     # image: bossjones/kibana:5.6.2
+    build: ./build/docker-kibana
     environment:
       ELASTICSEARCH_URL: http://elasticsearch:9200
       XPACK_MONITORING_ENABLED: "false"

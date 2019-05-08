@@ -23,7 +23,8 @@
         "unifi.syslog*": {
           "dynamic": true,
           "properties" : {
-            "firewall_source_ip": { "type": "ip", "ignore_malformed": "true" }
+            "firewall_source_ip": { "type": "ip", "ignore_malformed": "true" },
+            "remote_ip": { "type": "ip", "ignore_malformed": "true" }
           }
         }
       }

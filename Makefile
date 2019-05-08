@@ -14,3 +14,5 @@ start: clean
 .PHONY: fluentd
 fluentd:
 	docker-compose up fluentd
+
+restart: down start fluentd

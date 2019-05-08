@@ -5,3 +5,5 @@ fluentd.pos
 data
 test.txt
 alien.txt
+no-match.txt
+dummy.log*

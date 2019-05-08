@@ -20,7 +20,7 @@
             }
           }
         },
-        "unifi.syslog": {
+        "unifi.syslog*": {
           "dynamic": true,
           "properties" : {
             "firewall_source_ip": { "type": "ip", "ignore_malformed": "true" }

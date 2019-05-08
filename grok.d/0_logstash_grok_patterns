@@ -793,3 +793,5 @@ BOSS_IPTABLES_IP %{BOSS_IPTABLES_IP_START} %{BOSS_IPTABLES_IP_PAYLOAD}
 
 # BOSS_IPTABLES (?<orig_date>[\S]+) (?<orig_time>[\S]+) (?<hostname>[\S]+) ([\S]+) \[(?<since_bootup>[\d\.]+)\] (?<prefix>[\S]+)? %{BOSS_IPTABLES_ETHERNET} %{BOSS_IPTABLES_IP}
 BOSS_IPTABLES %{BOSS_IPTABLES_ETHERNET} %{BOSS_IPTABLES_IP}
+
+BOSS_NULL (?:null)

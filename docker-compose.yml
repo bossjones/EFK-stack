@@ -23,6 +23,7 @@ services:
     volumes:
       # - ./fluentd/conf:/etc/fluentd
       - ./fluentd/conf:/fluentd/etc
+      - ./etc/fluent/conf.d:/etc/fluent/conf.d
       - ./log:/log
       - ./grok.d:/grok.d
     environment:

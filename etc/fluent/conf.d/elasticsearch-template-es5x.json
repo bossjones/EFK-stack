@@ -1,0 +1,32 @@
+{
+  "template" : "*",
+  "mappings" : {
+    "_default_" : {
+      "properties" : {
+        "geoip"  : {
+          "dynamic": true,
+          "properties" : {
+            "location" : {
+              "type" : "geo_point",
+              "ignore_malformed": "true"
+              },
+            "latitude": {
+              "type": "half_float",
+              "ignore_malformed": "true"
+            },
+            "longitude": {
+              "type": "half_float",
+              "ignore_malformed": "true"
+            }
+          }
+        },
+        "unifi.syslog": {
+          "dynamic": true,
+          "properties" : {
+            "firewall_source_ip": { "type": "ip", "ignore_malformed": "true" }
+          }
+        }
+      }
+    }
+  }
+}

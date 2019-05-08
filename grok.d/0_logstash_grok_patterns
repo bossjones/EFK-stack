@@ -650,9 +650,25 @@ BOSSJONES_IPTABLES_IP_START SRC=%{IPV4:firewall.source.ip} DST=%{IPV4:firewall.d
 # --------------------------------------------------------------------------------------
 # Combined these guys parse this:
 # --------------------------------------------------------------------------------------
+# DEBUG: Matches -> 2017-11-24T00:01:42-05:00 NetworkSecurityUbiquitiUSGULAN
+# --------------------------------------------------------------------------------------
+BOSSJONES_UNIFI %{SYSLOGTIMESTAMP:time} %{HOSTNAME:hostname}
+
+# --------------------------------------------------------------------------------------
+# Combined these guys parse this:
+# --------------------------------------------------------------------------------------
+# DEBUG: Matches -> 2017-11-24T00:01:42-05:00 NetworkSecurityUbiquitiUSGULAN
+# --------------------------------------------------------------------------------------
+BOSSJONES_UNIFI_RAW %{BOSSJONES_UNIFI} %{GREEDYDATA:message}
+
+BOSSJONES_UNIFI_PROCESS_NAME %{WORD:process_name}:
+
+# --------------------------------------------------------------------------------------
+# Combined these guys parse this:
+# --------------------------------------------------------------------------------------
 # DEBUG: Matches -> 2017-11-24T00:01:42-05:00 NetworkSecurityUbiquitiUSGULAN kernel:
 # --------------------------------------------------------------------------------------
-BOSSJONES_UNIFI_SECURITYGATEWAY_KERNEL_START %{SYSLOGTIMESTAMP:time} %{HOSTNAME:hostname} %{WORD:process_name}:
+BOSSJONES_UNIFI_SECURITYGATEWAY_KERNEL_START %{BOSSJONES_UNIFI} %{BOSSJONES_UNIFI_PROCESS_NAME}
 
 # --------------------------------------------------------------------------------------
 # Combined these guys parse this:

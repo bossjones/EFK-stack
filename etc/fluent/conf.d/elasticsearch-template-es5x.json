@@ -14,30 +14,6 @@
             },
             "longitude": {
               "type": "half_float"
-            },
-            "location_string": {
-              "type": "text",
-              "ignore_malformed": "true"
-            },
-            "location_array": {
-              "type": "nested",
-              "ignore_malformed": "true"
-            },
-            "postal_code" : {
-              "type" : "text",
-              "ignore_malformed": "true"
-            },
-            "city" : {
-              "type" : "text",
-              "ignore_malformed": "true"
-            },
-            "country" : {
-              "type" : "text",
-              "ignore_malformed": "true"
-            },
-            "country_name" : {
-              "type" : "text",
-              "ignore_malformed": "true"
             }
           }
         },

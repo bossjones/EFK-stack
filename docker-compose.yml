@@ -26,6 +26,7 @@ services:
       - ./etc/fluent/conf.d:/etc/fluent/conf.d
       - ./log:/log
       - ./grok.d:/grok.d
+      - ./buffers:/buffers:rw
     environment:
       FLUENTD_ARGS: "--no-supervisor -vv"
       TZ: "UTC"

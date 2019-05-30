@@ -1,0 +1,9 @@
+version: '3'
+services:
+  curator:
+    # http://172.16.2.128:5601/app/kibana#/discover?_g=(refreshInterval:(display:Off,pause:!f,value:0),time:(from:now-90d,mode:quick,to:now))&_a=(columns:!(firewall.destination.ip,firewall.nf_protocol,firewall.rule_action,firewall.rule_index,firewall.source.ip,geoip.city_name,geoip.country_iso_code,geoip.country_name,geoip.latitude,geoip.location,geoip.longitude,geoip.region_name,hostname,firewall.interface,firewall.spt),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:AWq80qWlJdT1g2k7K4U4,key:hostname,negate:!t,type:phrase,value:unifiap-ac-pro.localdomain),query:(match:(hostname:(query:unifiap-ac-pro.localdomain,type:phrase))))),index:AWq80qWlJdT1g2k7K4U4,interval:auto,query:(match_all:()),sort:!('@timestamp',desc))
+    # image: aknudsen/es-curator-service:5.3.0-1
+    build: ./build/docker-curator
+    command: ["curator","--config", "/etc/config/config.yml", "/etc/config/action_file.yml"]
+    volumes:
+      - ./etc/config:/etc/config

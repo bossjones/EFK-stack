@@ -17,6 +17,17 @@
             }
           }
         },
+        "firewall": {
+          "dynamic": true,
+          "properties" : {
+            "destination.ip" : {
+              "type" : "ip"
+              },
+            "source.ip": {
+              "type": "ip"
+            }
+          }
+        },
         "unifi.syslog*": {
           "dynamic": true,
           "properties" : {
